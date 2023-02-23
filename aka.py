@@ -7,7 +7,7 @@ import sys
 import os
 
 
-serv = "127.0.0.1"
+serv = "irc.undernet.org"
 port = 6667
 nick = "siestu"
 pwrd = None
@@ -97,16 +97,19 @@ while 1:
                         for line in lines:
                             line=line.strip()
                             lst=line.split()
-                            if aka in lst:
+                            if aka in (name.upper() for name in lst):
                                 found = True
-                                irc.send(str.encode("PRIVMSG {} :{} AKA: {}\r\n".format(chan,aka,line)))
+                                irc.send(str.encode("PRIVMSG {} :{} AKA: {}\r\n".format(chan,aka,line.strip())))
                                 break
 
                             
             elif cmd == "NICK":
 
                 fromNick = src;
-                toNick = par;
+                toNick = par[1:] if par[0]==":" else par;
+
+                fromNick=fromNick.strip()
+                toNick=toNick.strip()
 
                 print("{} changed nick to {}.".format(fromNick,toNick))
 
@@ -119,12 +122,12 @@ while 1:
 
                     for i in range(len(lines)):
                         lst=lines[i].split()
-                        if (fromNick in lst) or (toNick in lst):
+                        if (fromNick.upper() in (name.upper() for name in lst)) or (toNick.upper() in lst):
                             found = True
-                            if fromNick not in lst:
-                                lines[i]+=" "+fromNick                            
-                            if toNick not in lst:
-                                lines[i]+=" "+toNick                            
+                            if fromNick.upper() not in (name.upper() for name in lst):
+                                lines[i]+=" "+fromNick.strip()                            
+                            if toNick.upper() not in (name.upper() for name in lst):
+                                lines[i]+=" "+toNick.strip()                            
                             break
 
 
@@ -141,9 +144,9 @@ while 1:
                         for j in range(i+1,len(lines)):
                             lst1=lines[j].split()
                             for k in lst1:
-                                if k in lst0:
+                                if k.upper() in (name.upper() for name in lst0):
 
-                                    lines[i]+=" "+lines[j]
+                                    lines[i]+=" "+lines[j].strip()
                                     again = True                
                                     break
 
