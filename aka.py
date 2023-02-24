@@ -11,7 +11,7 @@ serv = "irc.undernet.org"
 port = 6667
 nick = "siestu"
 pwrd = None
-chan = "#pantasya"
+chan = "#makati"
 
 
 
@@ -95,11 +95,10 @@ while 1:
                                 lines.append(line.strip()) 
 
                         for line in lines:
-                            line=line.strip()
-                            lst=line.split()
-                            if aka in (name.upper() for name in lst):
+                            lst=line.strip().split()
+                            if aka.upper() in (name.upper() for name in lst):
                                 found = True
-                                irc.send(str.encode("PRIVMSG {} :{} AKA: {}\r\n".format(chan,aka,line.strip())))
+                                irc.send(str.encode("PRIVMSG {} :{}: {} AKA: {}\r\n".format(chan,src,aka,line.strip())))
                                 break
 
                             
